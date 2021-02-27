@@ -11,7 +11,7 @@
 #define EEPROM_SIZE 4
 
 uint64_t lastDebounceTime = 0;
-unsigned long debounceDelay = 60000;//minut
+unsigned long debounceDelay = 60000;
 
 BLECharacteristic *pCharacteristic;
 
@@ -79,7 +79,7 @@ void setup() {
                                          BLECharacteristic::PROPERTY_WRITE
                                        );
                                        
-  pCharacteristic->setAccessPermissions(ESP_GATT_PERM_READ_ENCRYPTED | ESP_GATT_PERM_WRITE_ENCRYPTED);//ako nije uparen nece moci da procita
+  pCharacteristic->setAccessPermissions(ESP_GATT_PERM_READ_ENCRYPTED | ESP_GATT_PERM_WRITE_ENCRYPTED);//client cannot read characteristic if not paired
   pCharacteristic->setValue(simpleCounter);
   pCharacteristic->setCallbacks(new MyCallbacks());
 
@@ -89,7 +89,7 @@ void setup() {
 
   BLESecurity *pSecurity = new BLESecurity();
   uint32_t passkey = 123456;
-  esp_ble_gap_set_security_param(ESP_BLE_SM_SET_STATIC_PASSKEY, &passkey, sizeof(uint32_t));//postavljanje statickog pina jer void BLESecurity::setStaticPIN(uint32_t pin) ne radi
+  esp_ble_gap_set_security_param(ESP_BLE_SM_SET_STATIC_PASSKEY, &passkey, sizeof(uint32_t));//BLESecurity::setStaticPIN(uint32_t pin) setStaticPin does not work
   pSecurity->setAuthenticationMode(ESP_LE_AUTH_REQ_SC_MITM_BOND);
   pSecurity->setCapability(ESP_IO_CAP_OUT);
   pSecurity->setInitEncryptionKey(ESP_BLE_ENC_KEY_MASK | ESP_BLE_ID_KEY_MASK);
